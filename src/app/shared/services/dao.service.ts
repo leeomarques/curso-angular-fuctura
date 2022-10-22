@@ -1,13 +1,14 @@
-import { HttpClient, HttpHandler, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AppState } from '../app.state';
+import { AppState } from 'src/app/app-state';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DaoService {
 
+  // tipo de retorno esperado
   public static readonly MEDIA_TYPE_APP_JSON = 'application/json';
 
   constructor(
@@ -35,6 +36,10 @@ export class DaoService {
     let headers: HttpHeaders = new HttpHeaders();
     headers = headers.append('Accept', mediaType);
     // se nao existir token nao informar
+    // token != null
+    // token != ''
+    // token != undefined
+    // inverso colocaro o ->!this.state.token
     if (this.state.token) {
       headers = headers.append('Authorization', `Bearer ${this.state.token}`);
     }
