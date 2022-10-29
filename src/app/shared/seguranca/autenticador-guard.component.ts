@@ -2,26 +2,29 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import Swal from 'sweetalert2';
 
+import { UsuarioService } from '../services/usuario.service';
+
 @Injectable()
 export class AutenticadorGuard implements CanActivate {
 
   constructor(
     private router: Router,
-    private state: AppState) { }
+    private usuarioService: UsuarioService
+  ) { }
 
-
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
-    if (this.state.token && this.state.token.length > 5) {
+  canActivate( route: ActivatedRouteSnapshot, state: RouterStateSnapshot ): boolean {
+    if (this.usuarioService.usuarioLogado) {
       return true;
     }
 
     Swal.fire(
-      'Sessão Expirada',
-      'Favor realizar novo Login.',
-      'info'
+    'Sessão Expirada',
+    'Favor realizar novo Login.',
+    'info'
     );
 
     this.router.navigate(['/login']);
+
     return false;
   }
 }

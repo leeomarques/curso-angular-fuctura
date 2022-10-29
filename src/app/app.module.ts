@@ -14,6 +14,8 @@ import { ReceitasComponent } from './relatorios/receitas/receitas.component';
 import { MenuComponent } from './shared/components/menu/menu.component';
 import { SharedModule } from './shared/shared.module';
 
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,6 +33,7 @@ import { SharedModule } from './shared/shared.module';
     BrowserAnimationsModule,
     MaterialModule,
     SharedModule,
+    SweetAlert2Module.forRoot(),
   ],
 
   bootstrap: [AppComponent],

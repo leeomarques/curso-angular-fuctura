@@ -7,14 +7,27 @@ import { DespesasComponent } from './lancamentos/despesas/despesas.component';
 import { ReceitasComponent } from './lancamentos/receitas/receitas.component';
 import { LoginComponent } from './login/login.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { AutenticadorGuard } from './shared/seguranca/autenticador-guard.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'cadastro', component: CadastroComponent },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'relatorios/despesa', component: DespesasComponent },
-  { path: 'relatorio/receita', component: ReceitasComponent },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [AutenticadorGuard],
+  },
+  {
+    path: 'relatorios/despesa',
+    component: DespesasComponent,
+    canActivate: [AutenticadorGuard],
+  },
+  {
+    path: 'relatorio/receita',
+    component: ReceitasComponent,
+    canActivate: [AutenticadorGuard],
+  },
   {
     path: 'lancamentos',
     loadChildren: () =>
