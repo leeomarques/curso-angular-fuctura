@@ -1,8 +1,5 @@
 import { Observable } from 'rxjs';
 import { AppState } from './../../app-state';
-import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { UsuarioService } from './usuario.service';
 
 @Injectable({
   providedIn: 'root',
