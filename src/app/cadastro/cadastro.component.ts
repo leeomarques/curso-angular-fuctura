@@ -1,29 +1,31 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cadastro',
   templateUrl: './cadastro.component.html',
-  styleUrls: ['./cadastro.component.scss']
+  styleUrls: ['./cadastro.component.scss'],
 })
 export class CadastroComponent implements OnInit {
+  formularioCadastro!: FormGroup;
 
-  formulario: FormGroup;
-
-  constructor(fb: FormBuilder) {
-    this.formulario = fb.group({
-      name: ["", Validators.required]
-  });
+  constructor(private router: Router, private formBuilder: FormBuilder) {
+    this.iniciarFormulario();
   }
 
-  createNewTask()
-  {
-      console.log(this.formulario.value)
+  createNewTask() {
+    console.log(this.formularioCadastro.value);
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
+
+  private iniciarFormulario(): void {
+    this.formularioCadastro = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      senha: ['', [Validators.required, Validators.minLength(3)]],
+      nome: ['', [Validators.required]],
+      telefone: ['', [Validators.required]],
+    });
   }
-
-
-
 }

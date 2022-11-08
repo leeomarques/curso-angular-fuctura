@@ -1,6 +1,12 @@
-import { NgModule } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import localePt from '@angular/common/locales/pt';
+import { LOCALE_ID, NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { AppState } from 'src/app/app-state';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -12,9 +18,10 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { DespesasComponent } from './relatorios/despesas/despesas.component';
 import { ReceitasComponent } from './relatorios/receitas/receitas.component';
 import { MenuComponent } from './shared/components/menu/menu.component';
+import { AutenticadorGuard } from './shared/seguranca/autenticador-guard.component';
 import { SharedModule } from './shared/shared.module';
 
-import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+registerLocaleData(localePt, 'pt');
 
 @NgModule({
   declarations: [
@@ -26,6 +33,13 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
     DashboardComponent,
     PageNotFoundComponent,
     MenuComponent,
+    AppComponent,
+    LoginComponent,
+    DashboardComponent,
+    CadastroComponent,
+    PageNotFoundComponent,
+    DespesasComponent,
+    ReceitasComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,8 +48,10 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
     MaterialModule,
     SharedModule,
     SweetAlert2Module.forRoot(),
+    HttpClientModule,
+    ReactiveFormsModule,
   ],
-
+  providers: [AppState, AutenticadorGuard, { provide: LOCALE_ID, useValue: 'pt' }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
