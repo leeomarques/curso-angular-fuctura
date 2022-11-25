@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./cadastro.component.scss'],
 })
 export class CadastroComponent implements OnInit {
+  
   formularioCadastro!: FormGroup;
 
   constructor(private router: Router, private formBuilder: FormBuilder) {
@@ -27,5 +28,9 @@ export class CadastroComponent implements OnInit {
       nome: ['', [Validators.required]],
       telefone: ['', [Validators.required]],
     });
+  }
+
+  onSubmit(): void {
+    console.log('este');
   }
 }

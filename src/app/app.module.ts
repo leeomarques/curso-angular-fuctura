@@ -33,13 +33,6 @@ registerLocaleData(localePt, 'pt');
     DashboardComponent,
     PageNotFoundComponent,
     MenuComponent,
-    AppComponent,
-    LoginComponent,
-    DashboardComponent,
-    CadastroComponent,
-    PageNotFoundComponent,
-    DespesasComponent,
-    ReceitasComponent,
   ],
   imports: [
     BrowserModule,
@@ -51,7 +44,11 @@ registerLocaleData(localePt, 'pt');
     HttpClientModule,
     ReactiveFormsModule,
   ],
-  providers: [AppState, AutenticadorGuard, { provide: LOCALE_ID, useValue: 'pt' }],
+  providers: [
+    AppState,
+    AutenticadorGuard,
+    { provide: LOCALE_ID, useValue: 'pt' },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
