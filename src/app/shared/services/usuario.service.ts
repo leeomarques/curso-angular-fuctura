@@ -2,10 +2,13 @@ import { Injectable } from '@angular/core';
 import { AppState } from 'src/app/app-state';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class UsuarioService {
-  constructor(private state: AppState) {}
+
+  constructor(
+    private state: AppState
+  ) { }
 
   get token(): string {
     return this.state.token;

@@ -1,3 +1,4 @@
+
 export interface IReceita {
   id?: number;
   tipo: string;

@@ -1,32 +1,175 @@
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
-export interface tabela {
-  data: string;
-  Descricao: string;
-  valor: number;
-  tipo: string;
-  fixo: string;
-}
-
-const ELEMENT_DATA: tabela[] = [
-  {data: '10/10/2010', Descricao: 'informação de decrição', valor: 1500, tipo: 'Geral', fixo: 'S'},
-  {data: '10/10/2010', Descricao: 'informação de decrição', valor: 1500, tipo: 'Geral', fixo: 'S'},
-  {data: '10/10/2010', Descricao: 'informação de decrição', valor: 1500, tipo: 'Geral', fixo: 'S'},
-];
+import { MenuTypeEnum } from '../shared/emuns/menu-type.enum';
+import { IDespesa } from '../shared/models/despesa.interface';
+import { IReceita } from '../shared/models/receita.interface';
+import { LancamentosService } from '../shared/services/lancamentos.service';
+import { MenuService } from '../shared/services/menu.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit {
+  dataSourceDespesas: IDespesa[] = [];
+  dataSourceReceitas: IReceita[] = [];
+  displayedColumns = ['data', 'valor', 'tipo', 'fixo', 'descricao', 'acoes'];
 
-  displayedColumns: string[] = ['data', 'Descricao', 'valor', 'tipo', 'fixo'];
-  dataSource = ELEMENT_DATA;
-
-  constructor() { }
+  constructor(
+    private router: Router,
+    private menuService: MenuService,
+    private lancamentosService: LancamentosService
+  ) {}
 
   ngOnInit(): void {
+    this.lastDespesas();
+    this.lastReceitas();
+    this.menuService.ondeEstou = MenuTypeEnum.DASHBOARD;
   }
 
+  private lastDespesas(): void {
+    this.lancamentosService.listaDespesas().subscribe({
+      next: (resp) => {
+        if (resp.status === HttpStatusCode.Ok) {
+          const lancamentos = resp.body;
+          if (lancamentos && lancamentos.length > 0) {
+            this.dataSourceDespesas = lancamentos
+              // filtrar as despesas
+              .filter((l) => l.ehReceita === false)
+              // transforma o lancamento em despesa
+              .map((lancamento) => {
+                const despesa: IDespesa = {
+                  data: lancamento.data,
+                  descricao: lancamento.descricao,
+                  ehFixo: lancamento.ehFixo,
+                  tipo: lancamento.tipo,
+                  valor: lancamento.valor,
+                  id: lancamento.id,
+                };
+                return despesa;
+              });
+          }
+        }
+      },
+    });
+  }
+
+  private removeDespesa(despesa: IDespesa): void {
+    this.lancamentosService.removerDespesa(despesa).subscribe({
+      next: (resp) => {
+        if (resp.status === HttpStatusCode.Ok) {
+          // atualizar a listagem
+          this.lastDespesas();
+          // mensagem
+          Swal.fire('Removido!', 'Despesa removido com sucesso.', 'success');
+        }
+      },
+      error: (err: HttpErrorResponse) => {
+        if (err.status < 500) {
+          Swal.fire('Erro ao remover a Despesa', err.error.mensagem, 'warning');
+        } else {
+          Swal.fire('Erro inespesado', err.error.mensagem, 'error');
+        }
+      },
+    });
+  }
+
+  private lastReceitas(): void {
+    this.lancamentosService.listaReceitas().subscribe({
+      next: (resp) => {
+        if (resp.status === HttpStatusCode.Ok) {
+          const lancamentos = resp.body;
+          if (lancamentos && lancamentos.length > 0) {
+            this.dataSourceReceitas = lancamentos
+              // filtrar as receitas
+              .filter((l) => l.ehReceita === true)
+              // transforma o lancamento em despesa
+              .map((lancamento) => {
+                const receita: IReceita = {
+                  data: lancamento.data,
+                  descricao: lancamento.descricao,
+                  ehFixo: lancamento.ehFixo,
+                  tipo: lancamento.tipo,
+                  valor: lancamento.valor,
+                  id: lancamento.id,
+                };
+                return receita;
+              });
+          }
+        }
+      },
+    });
+  }
+
+  private removeReceita(receita: IReceita): void {
+    this.lancamentosService.removerReceita(receita).subscribe({
+      next: (resp) => {
+        if (resp.status === HttpStatusCode.Ok) {
+          // atualizar a listagem
+          this.lastReceitas();
+          // mensagem
+          Swal.fire('Removido!', 'Receita removida com sucesso.', 'success');
+        }
+      },
+      error: (err: HttpErrorResponse) => {
+        if (err.status < 500) {
+          Swal.fire('Erro ao remover a Receita', err.error.mensagem, 'warning');
+        } else {
+          Swal.fire('Erro inespesado', err.error.mensagem, 'error');
+        }
+      },
+    });
+  }
+
+  onEditDespesa(despesa: IDespesa) {
+    this.lancamentosService.despesaSelecionada = despesa;
+    this.lancamentosService.modoEdicao = true;
+    this.router.navigate(['lancamentos/despesas']);
+  }
+
+  onEditReceita(receita: IReceita) {
+    this.lancamentosService.receitaSelecionada = receita;
+    this.lancamentosService.modoEdicao = true;
+    this.router.navigate(['lancamentos/receitas']);
+  }
+
+  onRemoveDespesa(despesa: IDespesa) {
+    Swal.fire({
+      title: 'Remover Despesa',
+      text:
+        'Deseja remover a despesa "' + despesa.descricao.toUpperCase() + '" ?',
+      icon: 'question',
+      confirmButtonText: 'Sim',
+      cancelButtonText: 'Não',
+      showCancelButton: true,
+      focusConfirm: false,
+    }).then((result) => {
+      // Se confirmar remover
+      if (result.isConfirmed) {
+        this.removeDespesa(despesa);
+      }
+    });
+  }
+
+  onRemoveReceita(receita: IReceita) {
+    Swal.fire({
+      title: 'Remover Receita',
+      text:
+        'Deseja remover a receita "' + receita.descricao.toUpperCase() + '" ?',
+      icon: 'question',
+      confirmButtonText: 'Sim',
+      cancelButtonText: 'Não',
+      showCancelButton: true,
+      focusConfirm: false,
+    }).then((result) => {
+      // Se confirmar remover
+      if (result.isConfirmed) {
+        this.removeReceita(receita);
+      }
+    });
+  }
 }

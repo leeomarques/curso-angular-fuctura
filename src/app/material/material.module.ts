@@ -1,30 +1,33 @@
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
-import { MatButtonModule } from '@angular/material/button';
-import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
-import { DefaultMatCalendarRangeStrategy, MatDatepickerModule } from '@angular/material/datepicker';
-import { MatGridListModule } from '@angular/material/grid-list';
+import { MatDatepickerModule, DefaultMatCalendarRangeStrategy } from '@angular/material/datepicker';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
 import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSelectModule } from '@angular/material/select';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatFormFieldModule} from '@angular/material/form-field'
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 export const material = [
-  FormsModule,
-  ReactiveFormsModule,
   MatIconModule,
   MatMenuModule,
   MatInputModule,
   MatTableModule,
   MatButtonModule,
   MatSelectModule,
+  MatTooltipModule,
   MatGridListModule,
   MatPaginatorModule,
+  MatFormFieldModule,
   MatDatepickerModule,
   MatNativeDateModule,
   MatMomentDateModule,
@@ -40,16 +43,20 @@ export const DATE_FORMATS = {
     monthYearLabel: 'MMM YYYY',
   },
 };
-
 @NgModule({
   declarations: [],
-  imports: [CommonModule, material],
-  exports: [material],
+  imports: [
+    CommonModule,
+    material
+  ],
+  exports: [
+    material
+  ],
   providers: [
     MatIconRegistry,
     DefaultMatCalendarRangeStrategy,
-    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
-    { provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS },
-  ],
+    {provide: MAT_DATE_LOCALE, useValue: 'pt-BR'},
+    {provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS},
+  ]
 })
-export class MaterialModule {}
+export class MaterialModule { }

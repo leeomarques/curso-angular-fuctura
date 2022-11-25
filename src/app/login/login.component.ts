@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-
 import { ILogin } from '../shared/models/login.interface';
 import { AutenticadorService } from '../shared/services/autenticador.service';
 import { UsuarioService } from '../shared/services/usuario.service';
@@ -11,9 +10,10 @@ import { UsuarioService } from '../shared/services/usuario.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+
   formularioLogin!: FormGroup;
 
   constructor(
@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private usuarioService: UsuarioService,
     private autenticadorService: AutenticadorService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.iniciarFormulario();
@@ -40,20 +40,24 @@ export class LoginComponent implements OnInit {
               'Erro na autenticação',
               'Ocorreu algum erro na obtenção do token',
               'warning'
-            );
+              );
           }
         }
       },
       error: (err: HttpErrorResponse) => {
-        Swal.fire('Erro na autenticação', err.error.mensagem, 'warning');
-      },
+        Swal.fire(
+          'Erro na autenticação',
+          err.error.mensagem,
+          'warning'
+          );
+      }
     });
   }
 
   private iniciarFormulario(): void {
     this.formularioLogin = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      senha: ['', [Validators.required, Validators.minLength(3)]],
+      senha: ['', [Validators.required, Validators.minLength(3)]]
     });
   }
 
@@ -61,4 +65,5 @@ export class LoginComponent implements OnInit {
     const login = this.formularioLogin.value;
     this.autenticar(login);
   }
+
 }
